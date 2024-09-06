@@ -1,44 +1,39 @@
-const speedElement = document.querySelector("#sped")
-const startBtn = document.querySelector("#start")
-const stopBtn = document.querySelector("#stop")
+const speedElement = document.querySelector("#sped");
+const startBtn = document.querySelector("#start");
+const stopBtn = document.querySelector("#stop");
 
-let watchId = null
+let watchId = null;
 
 startBtn.addEventListener("click", () => {
+    if (watchId) return;
 
-
-    if(watchId)
-        return
-
-    
-
-    function handleSuccess(position){
-
-        console.log(position)
-
-        speedElement.innerText = position.coords.speed ? (position.coords.speed * 3.6).toFixed(1) : 0
-        
-    }
-    function handleError(error){
-
+    function handleSuccess(position) {
+        console.log("Position updated:", position);
+        if (position.coords.speed !== undefined) {
+            speedElement.innerText = (position.coords.speed * 3.6).toFixed(1);
+        } else {
+            speedElement.innerText = "Speed not available";
+        }
     }
 
-    const options = { enableHighAccuracy: true } 
+    function handleError(error) {
+        console.error("Geolocation error:", error);
+    }
 
-    watchId = navigator.geolocation.watchPosition(handleSuccess, handleError, options)
+    const options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
+
+    watchId = navigator.geolocation.watchPosition(handleSuccess, handleError, options);
     
-    startBtn.classList.add("d-none")
-    stopBtn.classList.remove("d-none")
+    startBtn.classList.add("d-none");
+    stopBtn.classList.remove("d-none");
+});
 
-})
 stopBtn.addEventListener("click", () => {
+    if (!watchId) return;
 
-    if(!watchId)
-        return
+    navigator.geolocation.clearWatch(watchId);
+    watchId = null;
 
-    navigator.geolocation.clearWatch(watchId)
-    watchId= null
-
-    stopBtn.classList.add("d-none")
-    startBtn.classList.remove("d-none")
-})
+    stopBtn.classList.add("d-none");
+    startBtn.classList.remove("d-none");
+});

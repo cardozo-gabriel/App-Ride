@@ -1,6 +1,6 @@
-const speedElement = document.querySelector("#sped");
-const startBtn = document.querySelector("#start");
-const stopBtn = document.querySelector("#stop");
+const speedElement = document.querySelector('#sped');
+const startBtn = document.querySelector('#start');
+const stopBtn = document.querySelector('#stop');
 
 let watchId = null;
 
